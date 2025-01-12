@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Call Details</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f7fa;
+            color: #2d3748;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 40px auto;
+            padding: 32px;
+            background: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+        }
+
+        .Admin {
+            font-size: 28px;
+            text-align: center;
+            color: #1a202c;
+            background: #ebf8ff;
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 24px;
+            font-weight: 600;
+        }
+
+        .com_det {
+            font-weight: 600;
+            font-size: 20px;
+            color: #2d3748;
+            margin: 24px 0 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #4299e1;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #4a5568;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            background: #f8fafc;
+        }
+
+        input:focus, select:focus, #reason:focus {
+            outline: none;
+            border-color: #4299e1;
+            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.15);
+            background: white;
+        }
+
+        #reason {
+            width: 100%;
+            height: 120px;
+            padding: 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: inherit;
+            resize: vertical;
+            background: #f8fafc;
+        }
+
+        button {
+            background-color: #4299e1;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            width: 100%;
+            transition: all 0.3s ease;
+            margin-top: 16px;
+        }
+
+        button:hover {
+            background-color: #3182ce;
+            transform: translateY(-1px);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        select {
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 16px;
+            padding-right: 40px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 20px;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2 class="Admin">Admin Dashboard</h2>
+        <p class="com_det">Company Details</p>
+        <form action="{% url 'start_call' %}" method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="company_name">Company Name</label>
+                <input type="text" id="company_name" name="company_name" required>
+            </div>
+            <div class="form-group">
+                <label for="company_type">Company Type</label>
+                <select id="company_type" name="company_type" required>
+                    <option value="">Select type...</option>
+                    <option value="startup">Startup</option>
+                    <option value="enterprise">Enterprise</option>
+                    <option value="small_business">Small Business</option>
+                    <option value="large_corporation">Large Corporation</option>
+                    <option value="social_service">Social Service</option>
+                    <option value="government_agency">Government Agency</option>
+                    <option value="banking">Banking</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="company_domain">Company Domain</label>
+                <input type="text" id="company_domain" name="company_domain" required>
+            </div>
+            <div class="form-group">
+                <label for="mail_id">Company Email ID</label>
+                <input type="email" id="mail_id" name="mail_id" required>
+            </div>
+            <div class="form-group">
+                <label for="ai_name">AI Agent Name</label>
+                <input type="text" id="ai_name" name="ai_name" required>
+            </div>
+            <p class="com_det">Customer Details</p>
+            <div class="form-group">
+                <label for="user_name">Customer Name</label>
+                <input type="text" id="user_name" name="user_name" required>
+            </div>
+            <div class="form-group">
+                <label for="customer_type">Customer Type</label>
+                <select id="customer_type" name="customer_type" required>
+                    <option value="">Select type...</option>
+                    <option value="potential_customer">Potential customer</option>
+                    <option value="new_customer">New Customer</option>
+                    <option value="loyal_customer">Loyal/Frequent Customer</option>
+                    <option value="lapsed_customer">Lapsed Customer</option>
+                    <option value="premium_customer">Premium Customer</option>
+                    <option value="corporation">Corporation</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="reason">Reason for Call and Instructions for AI</label>
+                <textarea id="reason" name="reason" placeholder="Please enter the reason for the AI to cold call the customer, along with required instructions for the AI." required></textarea>
+            </div>
+            <button type="submit">Start Call</button>
+        </form>
+    </div>
+</body>
+</html>

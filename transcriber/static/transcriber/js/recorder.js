@@ -46,7 +46,7 @@ function stopRecording() {
     mediaRecorder.stop();
     startButton.disabled = false;
     stopButton.disabled = true;
-    statusElement.textContent = "Processing audio...";
+    statusElement.textContent = "Just a min...";
     spinner.classList.remove('hidden');
 }
 
@@ -62,21 +62,40 @@ async function sendAudioToServer() {
             body: formData
         });
 
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
         const data = await response.json();
+        console.log("Server response:", data);
         
         if (data.error) {
+            console.error("Server error:", data.error);
             addMessage('Error: ' + data.error, 'error');
-        } else {
-            // Add user's transcribed message
-            addMessage(data.transcription, 'user');
-            
-            // Add AI's response
-            addMessage(data.ai_response, 'ai');
-            
-            // Update conversation history
-            conversationHistory = data.history;
+            return;
         }
+
+        // Add messages to chat
+        addMessage(data.transcription, 'user');
+        addMessage(data.ai_response, 'ai');
+        
+        // Try to play audio if available
+        console.log(data.tts_status);
+        if (data.audio_data && data.tts_status === 'success') {
+            console.log("Attempting to play audio...");
+            try {
+                await playAudioResponse(data.audio_data);
+            } catch (audioError) {
+                console.error("Audio playback failed:", audioError);
+            }
+        } else {
+            console.log("No audio data available or TTS failed");
+        }
+        
+        conversationHistory = data.history;
+        
     } catch (err) {
+        console.error("Request failed:", err);
         addMessage('Error: ' + err.message, 'error');
     } finally {
         spinner.classList.add('hidden');
@@ -84,10 +103,62 @@ async function sendAudioToServer() {
     }
 }
 
+async function playAudioResponse(base64AudioData) {
+    return new Promise((resolve, reject) => {
+        try {
+            const audioData = atob(base64AudioData);
+            const arrayBuffer = new ArrayBuffer(audioData.length);
+            const view = new Uint8Array(arrayBuffer);
+            
+            for (let i = 0; i < audioData.length; i++) {
+                view[i] = audioData.charCodeAt(i);
+            }
+            
+            const audioBlob = new Blob([arrayBuffer], { type: 'audio/wav' });
+            const audioUrl = URL.createObjectURL(audioBlob);
+            const audio = new Audio(audioUrl);
+
+            audio.onerror = (e) => {
+                console.error("Audio error:", e);
+                URL.revokeObjectURL(audioUrl);
+                reject(new Error('Audio playback failed'));
+            };
+
+            audio.onended = () => {
+                console.log("Audio playback completed");
+                URL.revokeObjectURL(audioUrl);
+                resolve();
+            };
+
+            audio.play()
+                .then(() => console.log("Audio started playing"))
+                .catch(err => {
+                    console.error("Play failed:", err);
+                    reject(err);
+                });
+
+        } catch (err) {
+            console.error("Audio processing failed:", err);
+            reject(err);
+        }
+    });
+}
+
 function addMessage(text, type) {
     const messageDiv = document.createElement('div');
     messageDiv.className = `message ${type}-message`;
     messageDiv.textContent = text;
+    
+    if (type === 'ai') {
+        // Add a small speaker icon to AI messages
+        const speakerIcon = document.createElement('span');
+        speakerIcon.innerHTML = '🔊';
+        speakerIcon.className = 'speaker-icon';
+        speakerIcon.style.marginLeft = '8px';
+        speakerIcon.style.cursor = 'pointer';
+        messageDiv.appendChild(speakerIcon);
+    }
+    
     chatHistory.appendChild(messageDiv);
     chatHistory.scrollTop = chatHistory.scrollHeight;
 }
