@@ -19,7 +19,7 @@
         }
 
         .container {
-            max-width: 700px;
+            max-width: 720px;
             margin: 40px auto;
             padding: 32px;
             background: white;
@@ -131,6 +131,7 @@
 <body>
     <div class="container">
         <h2 class="Admin">Admin Dashboard</h2>
+        <p>Please Enter the details of the Company and the Customer to whom the call is to be made.</p>
         <p class="com_det">Company Details</p>
         <form action="{% url 'start_call' %}" method="POST">
             {% csrf_token %}

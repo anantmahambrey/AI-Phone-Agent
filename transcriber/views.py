@@ -122,6 +122,9 @@ def index(request):
         'call_details': request.session['call_details']
     })
 
+def endCall(request):
+    return redirect('form')
+
 @csrf_exempt
 def transcribe(request):
     if request.method == 'POST':
@@ -248,9 +251,9 @@ def transcribe(request):
 
             tts_url = "https://waves-api.smallest.ai/api/v1/lightning/get_speech"
             tts_payload = {
-                "voice_id": "emily",
+                "voice_id": "deepika",
                 "text": ai_response.text,
-                "speed": 1,
+                "speed": 1.15,
                 "sample_rate": 24000,
                 "add_wav_header": True
             }

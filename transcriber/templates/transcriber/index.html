@@ -21,6 +21,8 @@
         .controls {
             margin: 2rem 0;
             display: flex;
+            justify-content: center;
+            align-items:center;
             gap: 1rem;
         }
 
@@ -31,6 +33,18 @@
             border-radius: 0.5rem;
             transition: all 0.2s ease;
             background: #3B82F6;
+            color: white;
+            border: none;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .endCall{
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 500;
+            border-radius: 0.5rem;
+            transition: all 0.2s ease;
+            background: #f23933;
             color: white;
             border: none;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -50,6 +64,12 @@
         .status {
             margin: 2rem 0;
             color: #4B5563;
+            display:grid;
+            place-items: center;
+        }
+
+        .description{
+            text-align:center;
         }
 
         .conversation {
@@ -92,6 +112,7 @@
             font-size: 2.25rem;
             font-weight: 700;
             margin-bottom: 2rem;
+            text-align:center;
         }
 
         h3 {
@@ -108,7 +129,11 @@
             border-radius: 50%;
             animation: spin 1s linear infinite;
         }
-
+        .endthecall{
+            display:grid;
+            place-items:center;
+            margin-top:30px;
+        }
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
@@ -136,7 +161,10 @@
 </head>
 <body>
     <div class="container">
-        <h1>Call Simulation</h1>
+        <h1><u>Call Simulation</u></h1>
+        {% if call_details %}
+        <p class="description">You are customer <b>{{ call_details.user_name }}</b> talking to <b>AI agent {{ call_details.ai_name }}</b> from <u>{{ call_details.company_name }}</u><p>
+        {% endif %}
         
         <div class="controls">
             <button id="startRecording">Start Speaking</button>
@@ -154,6 +182,13 @@
                 <h3>AI Response:</h3>
                 <p id="aiResponseText"></p>
             </div>
+        </div>
+        <div class="endthecall">
+        <form method="POST" action="{% url 'end_Call' %}">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="endCall">End Call</button>
+        </form>
         </div>
     </div>
 

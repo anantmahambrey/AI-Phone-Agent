@@ -81,7 +81,6 @@ async function sendAudioToServer() {
         addMessage(data.ai_response, 'ai');
         
         // Try to play audio if available
-        console.log("hello",data.audio_data);
         if (data.audio_data) {
             console.log("Attempting to play audio...");
             try {
