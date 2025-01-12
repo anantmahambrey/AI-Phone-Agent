@@ -68,6 +68,7 @@ async function sendAudioToServer() {
 
         const data = await response.json();
         console.log("Server response:", data);
+        console.log("See this",data.audio_data);
         
         if (data.error) {
             console.error("Server error:", data.error);
@@ -80,8 +81,8 @@ async function sendAudioToServer() {
         addMessage(data.ai_response, 'ai');
         
         // Try to play audio if available
-        console.log(data.tts_status);
-        if (data.audio_data && data.tts_status === 'success') {
+        console.log("hello",data.audio_data);
+        if (data.audio_data) {
             console.log("Attempting to play audio...");
             try {
                 await playAudioResponse(data.audio_data);
