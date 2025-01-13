@@ -1,85 +1,3 @@
-# import os
-# import json
-# from django.shortcuts import render
-# from django.http import JsonResponse
-# from django.views.decorators.csrf import csrf_exempt
-# import google.generativeai as genai
-# import tempfile
-
-# def index(request):
-#     return render(request, 'transcriber/index.html')
-
-# @csrf_exempt
-# def transcribe(request):
-#     if request.method == 'POST':
-#         try:
-#             audio_file = request.FILES['audio']
-#             # We'll still receive the history but won't pass it to Gemini directly
-#             conversation_history = json.loads(request.POST.get('history', '[]'))
-            
-#             # Save the audio file temporarily
-#             with tempfile.NamedTemporaryFile(delete=False, suffix='.m4a') as tmp_file:
-#                 for chunk in audio_file.chunks():
-#                     tmp_file.write(chunk)
-#                 tmp_file_path = tmp_file.name
-
-#             # Configure Gemini API
-#             genai.configure(api_key="AIzaSyDxiigaZNe4TTzdDojZOoQfOC-PjnTLiw4")
-            
-#             # Upload file to Gemini
-#             myfile = genai.upload_file(tmp_file_path)
-
-#             # Create the model
-#             generation_config = {
-#                 "temperature": 1,
-#                 "top_p": 0.95,
-#                 "top_k": 40,
-#                 "max_output_tokens": 8192,
-#                 "response_mime_type": "text/plain",
-#             }
-
-#             model = genai.GenerativeModel(
-#                 model_name="gemini-1.5-flash",
-#                 generation_config=generation_config,
-#             )
-
-#             # Start a new chat session each time
-#             chat = model.start_chat()
-            
-#             # If there's conversation history, provide context
-#             if conversation_history:
-#                 context = "Previous conversation:\n"
-#                 for msg in conversation_history:
-#                     role = "User" if msg["role"] == "user" else "Assistant"
-#                     context += f"{role}: {msg['content']}\n"
-#                 chat.send_message(context)
-
-#             # Get transcription
-#             transcription_response = chat.send_message(["Transcribe this audio. Only return the speech. Not any other noises.", myfile])
-#             transcribed_text = transcription_response.text
-
-#             # Get AI response to transcribed text
-#             prompt = f"You are a salesperson, working for CapCount Technologies in Margao Goa. The user said: {transcribed_text}\n Given the user's prompt and the previous chat history, Please respond naturally and ask a follow-up question to continue the conversation."
-#             ai_response = chat.send_message(prompt)
-
-#             # Clean up temporary file
-#             os.unlink(tmp_file_path)
-
-#             # Update conversation history
-#             conversation_history.append({"role": "user", "content": transcribed_text})
-#             conversation_history.append({"role": "assistant", "content": ai_response.text})
-
-#             return JsonResponse({
-#                 'transcription': transcribed_text,
-#                 'ai_response': ai_response.text,
-#                 'history': conversation_history
-#             })
-            
-#         except Exception as e:
-#             return JsonResponse({'error': str(e)}, status=500)
-    
-#     return JsonResponse({'error': 'Invalid request'}, status=400)
-
 # transcriber/views.py
 import os
 import json
@@ -110,6 +28,7 @@ def start_call(request):
             'customer_type': request.POST.get('customer_type'),
             'reason': request.POST.get('reason'),
             'mail_id': request.POST.get('mail_id'),
+            'company_details': request.POST.get('company_details'),
         }
         return redirect('index')
     return redirect('form')
@@ -159,78 +78,80 @@ def transcribe(request):
             chat = model.start_chat()
 
             initial_context = f"""Role: Professional AI Sales Agent
-                Name: {call_details.get('ai_name')}
-                Company: {call_details.get('company_name')} ({call_details.get('company_type')})
-                Domain: {call_details.get('company_domain')}
-                Contact: {call_details.get('mail_id')}
+                Name: {call_details.get('ai_name')} ,
+                Company Name: {call_details.get('company_name')} ,
+                Company Type : {call_details.get('company_type')} ,
+                Domain: {call_details.get('company_domain')} ,
+                Company Contact: {call_details.get('mail_id')} ,
+                Company Details: {call_details.get('company_details')}
 
                 Target Customer:
-                - Name: {call_details.get('user_name')}
-                - Type: {call_details.get('customer_type')}
+                Name: {call_details.get('user_name')}
+                Type: {call_details.get('customer_type')}
 
                 Call Purpose:
                 {call_details.get('reason')}
-                Please follow the core guidelines while carrying out the call.
-                
+
                 Core Guidelines:
-
-                Keep responses under 70 words.
-                Try to ask one follow-up question per response.
-                Wait for confirmation before proceeding.
-                Carry out the call sequantially ONLY according to the conversation protocol mentioned below.
-
+                Response Length: Keep responses under 50 words.
+                Follow-Up Questions: Ask one relevant follow-up question per response to maintain engagement.
+                Confirmation: Always wait for customer confirmation before proceeding to the next step.
+                Sequential Flow: Follow the conversation protocol strictly without skipping steps.
 
                 Conversation Protocol:
-                1. Opening (Mandatory Script):
-                "Hello, this is {call_details.get('ai_name')} calling from {call_details.get('company_name')}. Am I speaking with {call_details.get('user_name')}?"
-                - If no → Verify once, apologize, and end call
-                - If yes → Proceed to availability check
 
-                2. Availability Check:
-                - Ask if this is a convenient time to talk
-                - If interrupting → Apologize and offer to reschedule
-                - If convenient → Proceed with conversation
+                Opening (Mandatory Script):
+                Script: "Hello, this is {call_details.get('ai_name')} calling from {call_details.get('company_name')}. Am I speaking with {call_details.get('user_name')}?"
+                If No: Verify once, apologize, and end the call.
+                If Yes: Proceed to the availability check.
 
-                3. Company Introduction:
-                - Provide brief company overview
-                - Focus on value proposition
-                - Build rapport before discussing business
+                Availability Check:
+                Ask: "Is this a convenient time to talk?"
+                If Interrupting: Apologize and offer to reschedule.
+                If Convenient: Proceed with the conversation.
 
-                4. Call Purpose:
-                - Clearly articulate reason for call
-                - Align with previous conversation context
-                - Avoid repetition unless requested
+                Company Introduction:
+                Provide a brief overview of the company.
+                Highlight the value proposition and how it aligns with the customer's needs.
+                Build rapport by showing genuine interest in the customer.
 
-                5. Engagement Guidelines:
-                - Practice active listening
-                - Personalize responses based on customer feedback
-                - Handle questions with transparency:
-                    → If any specific information about the company or product asked to you is not told to you in the reason for call and instructions above, 
-                    reply with "I'll have someone follow up with those details via {call_details.get('mail_id')}". 
-                    → Never provide unverified information not told to you.
+                Call Purpose:
+                Clearly articulate the reason for the call.
+                Align the conversation with the customer's context and previous interactions (if any).
+                Avoid repetition unless the customer requests it.
 
-                6. Response Scenarios:
+                Engagement Guidelines:
+                Active Listening: Pay close attention to the customer's responses and adjust accordingly.
+                Personalization: Tailor responses based on customer feedback and cues.
+
+                Transparency:
+                If asked for information not provided in the call details, respond with:
+                "I'll have someone follow up with those details via {call_details.get('mail_id')}."
+                Never provide unverified or speculative information.
+
+                Response Scenarios:
                 a) If Customer Shows Interest:
-                    - Guide through next steps as per call objective
-                    - Be specific about action items
-                
+                Guide them through the next steps as per the call objective.
+                Be specific about action items and timelines.
+
                 b) If Customer Is Hesitant:
-                    - Offer follow-up information
-                    - Propose specific callback time
-                    - Share email contact: {call_details.get('mail_id')}
+                Offer to provide follow-up information.
+                Propose a specific callback time.
+                Share the email contact: {call_details.get('mail_id')}.
 
                 c) If Customer Raises Concerns:
-                    - Address professionally
-                    - Focus on understanding
-                    - Provide factual responses only
+                Address concerns professionally and empathetically.
+                Focus on understanding their perspective.
+                Provide factual responses only.
 
-                7. Call Conclusion:
-                - Summarize key points
-                - Confirm next steps (if any)
-                - Express gratitude regardless of outcome
-                - Provide contact information if needed
+                Call Conclusion:
+                Summarize key points discussed.
+                Confirm next steps (if any).
+                Express gratitude for their time, regardless of the outcome.
+                Provide contact information if needed.
 
-                Language Protocol: Communication strictly in English unless otherwise specified.
+                Language Protocol:
+                Communicate strictly in English unless the customer specifies otherwise.
 
                 Previous Conversation Context:"""
             
@@ -244,14 +165,14 @@ def transcribe(request):
             transcription_response = chat.send_message(["This is what the customer said. Transcribe this audio. Only return the speech. Not any other noises.", myfile])
             transcribed_text = transcription_response.text
 
-            prompt = f"The customer said: {transcribed_text}. Please respond naturally according to the instructions mentioned earlier."
+            prompt = f"The customer said: {transcribed_text}. Please respond naturally according to the instructions mentioned earlier. Check the conversation history, and do not repeat responses. Just give the response. Do not include 'AI Assistant:'"
             ai_response = chat.send_message(prompt)
 
 
 
             tts_url = "https://waves-api.smallest.ai/api/v1/lightning/get_speech"
             tts_payload = {
-                "voice_id": "deepika",
+                "voice_id": "ananya",
                 "text": ai_response.text,
                 "speed": 1.15,
                 "sample_rate": 24000,

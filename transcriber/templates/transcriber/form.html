@@ -11,6 +11,20 @@
             box-sizing: border-box;
         }
 
+        .headingg{
+            background-color: #162544;
+            margin-bottom:25px;
+            height:90px;
+            display:grid;
+            place-items:center;
+        }
+
+        h1{
+            text-align:center;
+            font-size:40px;
+            color: white;
+        }
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: #f5f7fa;
@@ -20,7 +34,7 @@
 
         .container {
             max-width: 720px;
-            margin: 40px auto;
+            margin: 10px auto;
             padding: 32px;
             background: white;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -76,7 +90,7 @@
             background: white;
         }
 
-        #reason {
+        #reason,#company_details {
             width: 100%;
             height: 120px;
             padding: 12px;
@@ -129,6 +143,9 @@
     </style>
 </head>
 <body>
+    <div class="headingg">
+    <h1>SalesBot.ai</h1>
+    </div>
     <div class="container">
         <h2 class="Admin">Admin Dashboard</h2>
         <p>Please Enter the details of the Company and the Customer to whom the call is to be made.</p>
@@ -160,6 +177,10 @@
             <div class="form-group">
                 <label for="mail_id">Company Email ID</label>
                 <input type="email" id="mail_id" name="mail_id" required>
+            </div>
+            <div class="form-group">
+                <label for="company_details">Company Information</label>
+                <textarea id="company_details" name="company_details" placeholder="Brief information about the company." required></textarea>
             </div>
             <div class="form-group">
                 <label for="ai_name">AI Agent Name</label>
