@@ -1,18 +1,19 @@
 ## Introduction
 SalesBot.ai is a robust AI web agent capable of cold calling customers, holding meaningful conversations, and closing sales.
+**Project Link:** [Click Here](https://anant1911.pythonanywhere.com/)
 
 ## Features
-**Natural Language Understanding (NLU):** Understands and processes user intents effectively.
+-**Natural Language Understanding (NLU):** Understands and processes user intents effectively.
 
-**Speech-to-Text (STT):** Converts user speech into text accurately using Google Gemini 1.5 Flash Model.
+-**Speech-to-Text (STT):** Converts user speech into text accurately using Google Gemini 1.5 Flash Model.
 
-**Text-to-Speech (TTS):** Responds with natural-sounding voice output using the world's fastest smallest.ai Waves Lightning TTS model.
+-**Text-to-Speech (TTS):** Responds with natural-sounding voice output using the world's fastest smallest.ai Waves Lightning TTS model.
 
-**Sales Assistance:** Tailored to assist in sales scenarios by guiding users through product information and closing deals.
+-**Sales Assistance:** Tailored to assist in sales scenarios by guiding users through product information and closing deals.
 
-**Conversational AI:** Supports a dynamic and interactive dialogue system.
+-**Conversational AI:** Supports a dynamic and interactive dialogue system.
 
-**Customization:** Can be customized by the employee based on the customer, and reason for call.
+-**Customization:** Can be customized by the employee based on the customer, and reason for call.
 
 ## Technologies Used
 **Frontend:** HTML, CSS, JavaScript (for user interface)    
@@ -46,16 +47,15 @@ Open your web browser and navigate to http://127.0.0.1:8000/
 
 ## Model Details
 -Google's Gemini 1.5 Flash is a fast and versatile multimodal model for scaling across diverse tasks.
-
 We have used it for Text-to-Speech conversion and Speech-to-Speech conversations.
 
 -Waves is smallest.ai's unified platform for speech synthesis. It supports various models designed for real-time applications such as voicebots.
 
-Lightning is the world’s fastest text to speech model, generating around 10 seconds of hyper-realistic audio in just 100ms, all at once, no streaming.
+-Lightning is the world’s fastest text to speech model, generating around 10 seconds of hyper-realistic audio in just 100ms, all at once, no streaming.
 
 ## More Details
-**For WorkFlow and Architecture :** [SalesBot.ai Presentation]([https://example.com](https://drive.google.com/file/d/1pbXZCC3hCVbTBebbOrpZ4dDlN944jM7P/view?usp=drive_link))
+**For WorkFlow and Architecture :** [SalesBot.ai Presentation](https://drive.google.com/file/d/1pbXZCC3hCVbTBebbOrpZ4dDlN944jM7P/view?usp=drive_link)
 
-**Demo Video :** [Demo Video]([https://github.com/your-username](https://drive.google.com/file/d/1IEExkF8Y25dEnH1Y-lwP3Jlh45OD0SsT/view?usp=drive_link))
+**Demo Video :** [Demo Video](https://drive.google.com/file/d/1IEExkF8Y25dEnH1Y-lwP3Jlh45OD0SsT/view?usp=drive_link)
 
 
