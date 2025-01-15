@@ -50,7 +50,7 @@ Open your web browser and navigate to http://127.0.0.1:8000/
 
 ## Model Details 🤖
 -Google's Gemini 1.5 Flash is a fast and versatile multimodal model for scaling across diverse tasks.
-We have used it for Speech-to-Text conversion and Speech-to-Speech conversations.
+We have used it for Speech-to-Text conversion and Text-to-Text conversations.
 
 -Waves is smallest.ai's unified platform for speech synthesis. It supports various models designed for real-time applications such as voicebots.
 
